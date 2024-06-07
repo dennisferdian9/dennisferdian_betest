@@ -9,6 +9,17 @@ import { hashPassword } from "../utils/hashPass";
 
 export const Route = Router();
 
+Route.get('/lastlogin',authenticateJWT,async (req: Request, res: Response) => {
+  const currentDate = new Date();
+
+  // Subtract three days
+  const threeDaysBefore = new Date(currentDate);
+  threeDaysBefore.setDate(currentDate.getDate() - 3);
+  const userData = await userInfoSchemaModel.find({ lastLoginDateTime: { $gte: threeDaysBefore }  });
+  res.json({
+    data: userData,
+  });
+})
 
 Route.post("/register", async (req: Request, res: Response) => {
   try {

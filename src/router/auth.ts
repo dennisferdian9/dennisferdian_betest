@@ -12,6 +12,9 @@ Route.post('/login', async (req, res) => {
       const user = await userInfoSchemaModel.findOne({ accountId: username, password: hashPassword(password) });
       
       if (!user) {
+        await userInfoSchemaModel.findOneAndUpdate({accountId:username}, {
+          lastLoginDateTime: new Date()
+        })
         return res.status(401).json({ message: 'Invalid username or password' });
       }
     
